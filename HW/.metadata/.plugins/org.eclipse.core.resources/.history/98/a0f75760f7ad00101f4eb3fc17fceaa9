@@ -1,0 +1,78 @@
+import java.io.*;
+import java.util.*;
+
+public class capitalgain{
+	public static int[] curVal = new int[10];
+	public static int balance = 50000;
+	public static company comp = new company();
+	public static activity acti = new activity();
+	public static day day = new day();
+	public static int seq = 0;
+	public static LinkedList<company> companies = new LinkedList<company>();  
+	public static LinkedList<day> daylist = new LinkedList<day>();
+	
+	public static void main(String args[]) throws IOException{
+		//mHelp(); 
+		//randomVal();
+		nexDay();
+		nexDay();
+		nexDay();
+		System.out.print(daylist.get(2).getNumDay());
+	}
+	 
+	public static String mHelp() throws IOException{
+		String thisKey = "";
+		System.out.println("b Ý buy shares");
+		System.out.println("s Ý sell shares");
+		System.out.println("r Ý report market status, hold shares, and left money");
+		System.out.println("l Ý report activity log");
+		System.out.println("n Ý next day");
+		System.out.println("x Ý exit program");
+		thisKey = getAct("1");
+		return thisKey;
+	}
+	 
+	public static String getAct(String day) throws IOException{
+		BufferedReader buf = new BufferedReader(new InputStreamReader(System.in));
+		System.out.print("Day #"+day+", Input your command (h for help):");
+		String keyInput = buf.readLine();
+		return keyInput;
+	}
+	 
+	public static Integer randomVal(){
+		Random aRandom = new Random(); 
+		return aRandom.nextInt(200) + 10;
+	}
+	
+	public static void nexDay(){
+		int maxDay = seq;
+	
+		day cDay = new day();
+		cDay.setNumDay(maxDay+1);
+		for(int x = 0;x < 10;x++){
+			company comp = new company();
+			int curVal = randomVal();
+			comp.setDay(maxDay+1);
+			comp.setName("0"+Integer.toString(x+1));
+			int chk = 1;
+			if(maxDay == 0){
+				comp.setPrice(curVal);
+			}else{
+				int prePrice = daylist.get(maxDay-1).getCompany(x).getPrice();
+				while(chk == 1){
+					curVal = randomVal();
+					if((curVal > ((prePrice - (prePrice*20)/100))) && (curVal < ((prePrice + (prePrice*20)/100)))){
+						comp.setPrice(curVal);
+						comp.setChange(prePrice-curVal);
+						chk = 0;
+					} 
+				}
+			}
+			cDay.setCompanyList(comp);
+		}
+		//cDay.listCompany();
+		daylist.add(cDay);
+		seq = seq+1;
+		//System.out.println();
+	}
+}
